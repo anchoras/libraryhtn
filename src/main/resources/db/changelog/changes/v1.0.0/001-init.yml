@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-init
+      author: asyakovlev
+      comment: Baseline changelog — add schema migrations below
+      changes:
+        - tagDatabase:
