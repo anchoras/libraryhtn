@@ -2,25 +2,25 @@ package com.example.libraryhtn.controller;
 
 import com.example.libraryhtn.controller.dto.request.BookRequest;
 import com.example.libraryhtn.dto.BookDto;
-import lombok.val;
+import com.example.libraryhtn.service.BookService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/book")
 public class BookController {
 
+    private final BookService bookService;
+
     @PostMapping("/all")
     public List<BookDto> getAllBooks(@RequestBody BookRequest request) {
-        val id = UUID.randomUUID();
-        val idStr = id.toString().substring(0, 7);
-        val theBook = new BookDto(id, "Random Book " + idStr, "Some Creator of " + idStr, "romance,18+,woman", false, "Some impressions for " + idStr);
-        return List.of(theBook);
+        return bookService.getAll();
     }
 
 }
