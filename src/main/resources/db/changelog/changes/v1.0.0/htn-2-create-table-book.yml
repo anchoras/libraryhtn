@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+       id: 002-create-table-book
+       author: asyakovlev
+       changes:
+         - createTable:
+             tableName: book
+             columns:
+               - column:
+                   name: id
+                   type: uuid
+                   constraints:
+                     primaryKey: true
+                     nullable: false
+               - column:
+                   name: title
+                   type: varchar(255)
+                   constraints:
+                     nullable: false
+               - column:
+                   name: creator
+                   type: varchar(255)
+                   constraints:
+                     nullable: false
+               - column:
+                   name: tags
+                   type: varchar(255)
+                   constraints:
+                     nullable: true
+               - column:
+                   name: isRead
+                   type: boolean
+                   constraints:
+                     nullable: false
+               - column:
+                   name: impressions
+                   type: varchar(255)
+                   constraints:
+                     nullable: true

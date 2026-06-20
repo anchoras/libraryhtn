@@ -19,7 +19,7 @@ public class BookController {
     public List<BookDto> getAllBooks(@RequestBody BookRequest request) {
         val id = UUID.randomUUID();
         val idStr = id.toString().substring(0, 7);
-        val theBook = new BookDto(id, "Random Book " + idStr, "Some Creator of " + idStr, List.of("romance", "18+","woman"), false, "Some impressions for " + idStr);
+        val theBook = new BookDto(id, "Random Book " + idStr, "Some Creator of " + idStr, "romance,18+,woman", false, "Some impressions for " + idStr);
         return List.of(theBook);
     }
 

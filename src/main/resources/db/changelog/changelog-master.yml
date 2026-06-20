@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: changes/v1.0.0/001-init.yml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/v1.0.0/htn-2-create-table-book.yml
+      relativeToChangelogFile: true
