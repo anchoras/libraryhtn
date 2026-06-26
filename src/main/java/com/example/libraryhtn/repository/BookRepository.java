@@ -1,10 +1,13 @@
 package com.example.libraryhtn.repository;
 
+import com.example.libraryhtn.controller.dto.request.BookFilter;
 import com.example.libraryhtn.entity.Book;
 import com.example.libraryhtn.repository.sql.BookRepositorySql;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -22,11 +25,61 @@ public class BookRepository {
     private final static String TAGS = "tags";
     private final static String IS_READ = "is_read";
     private final static String IMPRESSIONS = "impressions";
+    private final static String FILTER = "filter";
+    private final static String GENERAL_LIMIT = "general_limit";
+    private final static String PARAMETER_LIMIT = "parameter_limit";
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public List<Book> getAll() {
         return jdbcTemplate.query(BookRepositorySql.GET_ALL, (rs, rowNumber) -> loadBookList(rs));
+    }
+
+    public List<Book> getStrictFiltered(BookFilter filter) {
+        if (filter == null || filter.isBlank()) {
+            return getAll();
+        }
+
+        val sql = new StringBuilder(BookRepositorySql.GET_STRICT_FILTERED_BASE);
+        val params = new MapSqlParameterSource();
+
+        if (filter.hasTitle()) {
+            sql.append(" and title ilike :").append(TITLE);
+            params.addValue(TITLE, "%" + filter.title() + "%");
+        }
+        if (filter.hasCreator()) {
+            sql.append(" and creator ilike :").append(CREATOR);
+            params.addValue(CREATOR, "%" + filter.creator() + "%");
+        }
+        if (filter.hasTags()) {
+            sql.append(" and tags ilike :").append(TAGS);
+            params.addValue(TAGS, "%" + filter.tags() + "%");
+        }
+        if (filter.hasIsRead()) {
+            sql.append(" and is_read = :").append(IS_READ);
+            params.addValue(IS_READ, filter.isRead());
+        }
+        if (filter.hasImpressions()) {
+            sql.append(" and tags ilike :").append(TAGS);
+            params.addValue(IMPRESSIONS, "%" + filter.tags() + "%");
+        }
+
+        return namedParameterJdbcTemplate.query(
+                sql.toString(),
+                params,
+                (rs, rowNumber) -> loadBookList(rs));
+    }
+
+    public List<Book> getVagueFiltered(String filter, Integer generalLimit, Integer parameterLimit) {
+        val mapSqlParameterSource = new MapSqlParameterSource()
+                .addValue(FILTER, "%" + filter + "%")
+                .addValue(GENERAL_LIMIT, generalLimit)
+                .addValue(PARAMETER_LIMIT, parameterLimit);
+        return namedParameterJdbcTemplate.query(
+                BookRepositorySql.GET_VAGUE_FILTERED,
+                mapSqlParameterSource,
+                (rs, rowNumber) -> loadBookList(rs));
     }
 
     private Book loadBookList(ResultSet rs) throws SQLException {
