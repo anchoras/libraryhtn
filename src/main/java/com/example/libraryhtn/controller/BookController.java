@@ -4,10 +4,7 @@ import com.example.libraryhtn.controller.dto.request.BookRequest;
 import com.example.libraryhtn.dto.BookDto;
 import com.example.libraryhtn.service.BookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,9 +15,19 @@ public class BookController {
 
     private final BookService bookService;
 
-    @PostMapping("/all")
-    public List<BookDto> getAllBooks(@RequestBody BookRequest request) {
+    @GetMapping("/all")
+    public List<BookDto> getAllBooks() {
         return bookService.getAll();
+    }
+
+    @PostMapping
+    public List<BookDto> getStrictFilteredBooks(@RequestBody BookRequest request) {
+        return bookService.getStrictFiltered(request);
+    }
+
+    @GetMapping
+    public List<BookDto> getFilteredBooks(@RequestParam String request) {
+        return bookService.getVagueFiltered(request);
     }
 
 }
