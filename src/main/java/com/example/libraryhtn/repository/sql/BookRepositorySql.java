@@ -40,4 +40,12 @@ public class BookRepositorySql {
             limit :general_limit
             """;
 
+    public static final String SAVE = """
+            insert into book
+            (title, creator, tags, is_read, impressions)
+            values
+            (:title, :creator, :tags, :is_read, :impressions)
+            returning *
+            """;
+
 }

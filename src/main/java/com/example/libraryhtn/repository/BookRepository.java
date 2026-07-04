@@ -5,6 +5,7 @@ import com.example.libraryhtn.entity.Book;
 import com.example.libraryhtn.repository.sql.BookRepositorySql;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -33,7 +34,7 @@ public class BookRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public List<Book> getAll() {
-        return jdbcTemplate.query(BookRepositorySql.GET_ALL, (rs, rowNumber) -> loadBookList(rs));
+        return jdbcTemplate.query(BookRepositorySql.GET_ALL, (rs, rowNumber) -> loadBook(rs));
     }
 
     public List<Book> getStrictFiltered(BookFilter filter) {
@@ -68,7 +69,7 @@ public class BookRepository {
         return namedParameterJdbcTemplate.query(
                 sql.toString(),
                 params,
-                (rs, rowNumber) -> loadBookList(rs));
+                (rs, rowNumber) -> loadBook(rs));
     }
 
     public List<Book> getVagueFiltered(String filter, Integer generalLimit, Integer parameterLimit) {
@@ -79,10 +80,23 @@ public class BookRepository {
         return namedParameterJdbcTemplate.query(
                 BookRepositorySql.GET_VAGUE_FILTERED,
                 mapSqlParameterSource,
-                (rs, rowNumber) -> loadBookList(rs));
+                (rs, rowNumber) -> loadBook(rs));
     }
 
-    private Book loadBookList(ResultSet rs) throws SQLException {
+    public Book save(Book book) {
+        val mapSqlParameterSource = new MapSqlParameterSource()
+                .addValue(TITLE, book.getTitle())
+                .addValue(CREATOR, book.getCreator())
+                .addValue(TAGS, book.getTags())
+                .addValue(IS_READ, book.getIsRead())
+                .addValue(IMPRESSIONS, book.getImpressions());
+        return namedParameterJdbcTemplate.queryForObject(
+                BookRepositorySql.SAVE,
+                mapSqlParameterSource,
+                new BeanPropertyRowMapper<>(Book.class));
+    }
+
+    private Book loadBook(ResultSet rs) throws SQLException {
         val book = new Book();
         book.setId(UUID.fromString(rs.getString(ID)));
         book.setTitle(rs.getString(TITLE));
