@@ -27,7 +27,7 @@ public class BookService {
     }
 
     public List<BookDto> getStrictFiltered(BookRequest request) {
-        if (request == null || request.bookFilter().isBlank()) {
+        if (request == null || request.bookFilter() == null || request.bookFilter().isBlank()) {
             throw new BookFilterException("There is no any input in the filter");
         }
 
@@ -41,6 +41,12 @@ public class BookService {
                 VAGUE_RESPONSE_GENERAL_LIMIT,
                 VAGUE_RESPONSE_PARAMETER_LIMIT);
         return bookMapper.toDto(bookList);
+    }
+
+    public BookDto addBook(BookDto bookDto) {
+        val book = bookMapper.toEntity(bookDto);
+        val savedBook = bookRepository.save(book);
+        return bookMapper.toDto(savedBook);
     }
 
 }

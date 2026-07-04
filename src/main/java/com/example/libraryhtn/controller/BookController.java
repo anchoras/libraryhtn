@@ -4,6 +4,7 @@ import com.example.libraryhtn.controller.dto.request.BookRequest;
 import com.example.libraryhtn.dto.BookDto;
 import com.example.libraryhtn.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,11 @@ public class BookController {
     @GetMapping
     public List<BookDto> getFilteredBooks(@RequestParam String request) {
         return bookService.getVagueFiltered(request);
+    }
+
+    @PostMapping("/add")
+    public BookDto addBook(@Validated @RequestBody BookDto request) {
+        return bookService.addBook(request);
     }
 
 }

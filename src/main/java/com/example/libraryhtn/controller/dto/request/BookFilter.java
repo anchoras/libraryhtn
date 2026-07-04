@@ -23,6 +23,7 @@ public record BookFilter(
                 || (StringUtils.isBlank(title)
                     && StringUtils.isBlank(creator)
                     && StringUtils.isBlank(tags)
+                    && isRead == null
                     && StringUtils.isBlank(impressions));
     }
 
