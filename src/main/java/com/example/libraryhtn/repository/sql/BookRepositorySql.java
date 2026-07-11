@@ -40,12 +40,43 @@ public class BookRepositorySql {
             limit :general_limit
             """;
 
-    public static final String SAVE = """
+    public static final String CREATE = """
             insert into book
             (title, creator, tags, is_read, impressions)
             values
             (:title, :creator, :tags, :is_read, :impressions)
             returning *
             """;
+
+    public static final String GET_BY_ID = """
+            select *
+            from book
+            where id = :id
+            """;
+
+    public static final String UPDATE = """
+            update book
+            set
+                title = coalesce(:title, title),
+                creator = coalesce(:creator, creator),
+                tags = coalesce(:tags, tags),
+                is_read = coalesce(:is_read, is_read),
+                impressions = coalesce(:impressions, impressions)
+            where id = :id
+            returning *
+            """;
+
+    public static final String DELETE = """
+            delete from book
+            where id = :id
+            """;
+
+    public static final String EXISTS_BY_ID = """
+        select exists(
+            select 1
+            from book
+            where id = :id
+        )
+        """;
 
 }
