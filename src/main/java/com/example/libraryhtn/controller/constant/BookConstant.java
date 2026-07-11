@@ -9,6 +9,7 @@ public class BookConstant {
     public static final String CREATOR = "creator";
     public static final String TAGS = "tags";
     public static final String IS_READ = "isRead";
+    public static final String FORMAT = "format";
     public static final String IMPRESSIONS = "impressions";
     
 }

@@ -17,6 +17,7 @@ public class BookMapper {
         book.setCreator(dto.creator());
         book.setTags(dto.tags());
         book.setIsRead(dto.isRead());
+        book.setFormat(dto.format());
         book.setImpressions(dto.impressions());
 
         return book;
@@ -35,6 +36,7 @@ public class BookMapper {
                 entity.getCreator(),
                 entity.getTags(),
                 entity.getIsRead(),
+                entity.getFormat(),
                 entity.getImpressions());
     }
 

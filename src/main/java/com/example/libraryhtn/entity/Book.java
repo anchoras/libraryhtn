@@ -1,5 +1,6 @@
 package com.example.libraryhtn.entity;
 
+import com.example.libraryhtn.enums.BookFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,5 +15,6 @@ public class Book {
     String creator;
     String tags;
     Boolean isRead;
+    BookFormat format;
     String impressions;
 }

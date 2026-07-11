@@ -37,14 +37,21 @@ public class BookRepositorySql {
                 where impressions like :filter
                 limit :parameter_limit
             )
+            union
+            (
+                select *
+                from book
+                where format ilike :filter
+                limit :parameter_limit
+            )
             limit :general_limit
             """;
 
     public static final String CREATE = """
             insert into book
-            (title, creator, tags, is_read, impressions)
+            (title, creator, tags, is_read, format, impressions)
             values
-            (:title, :creator, :tags, :is_read, :impressions)
+            (:title, :creator, :tags, :is_read, :format, :impressions)
             returning *
             """;
 
@@ -61,6 +68,7 @@ public class BookRepositorySql {
                 creator = coalesce(:creator, creator),
                 tags = coalesce(:tags, tags),
                 is_read = coalesce(:is_read, is_read),
+                format = coalesce(:format, format),
                 impressions = coalesce(:impressions, impressions)
             where id = :id
             returning *
