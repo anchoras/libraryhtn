@@ -2,6 +2,7 @@ package com.example.libraryhtn.repository;
 
 import com.example.libraryhtn.controller.dto.request.BookFilter;
 import com.example.libraryhtn.entity.Book;
+import com.example.libraryhtn.enums.BookFormat;
 import com.example.libraryhtn.repository.sql.BookRepositorySql;
 import com.example.libraryhtn.util.BookUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class BookRepository {
     private final static String CREATOR = "creator";
     private final static String TAGS = "tags";
     private final static String IS_READ = "is_read";
+    private final static String FORMAT = "format";
     private final static String IMPRESSIONS = "impressions";
     private final static String FILTER = "filter";
     private final static String GENERAL_LIMIT = "general_limit";
@@ -62,6 +64,10 @@ public class BookRepository {
             sql.append(" and is_read = :").append(IS_READ);
             params.addValue(IS_READ, filter.isRead());
         }
+        if (BookUtil.hasFormat(filter)) {
+            sql.append(" and format = :").append(FORMAT);
+            params.addValue(FORMAT, filter.format().name());
+        }
         if (BookUtil.hasImpressions(filter)) {
             sql.append(" and tags ilike :").append(TAGS);
             params.addValue(IMPRESSIONS, "%" + filter.tags() + "%");
@@ -90,6 +96,7 @@ public class BookRepository {
                 .addValue(CREATOR, book.getCreator())
                 .addValue(TAGS, book.getTags())
                 .addValue(IS_READ, book.getIsRead())
+                .addValue(FORMAT, book.getFormat().name())
                 .addValue(IMPRESSIONS, book.getImpressions());
         return namedParameterJdbcTemplate.query(
                 BookRepositorySql.CREATE,
@@ -115,12 +122,16 @@ public class BookRepository {
     }
 
     public Book update(Book book) {
+        val format = book.getFormat() != null
+                ? book.getFormat().name()
+                : null;
         val mapSqlParameterSource = new MapSqlParameterSource()
                 .addValue(ID, book.getId())
                 .addValue(TITLE, book.getTitle())
                 .addValue(CREATOR, book.getCreator())
                 .addValue(TAGS, book.getTags())
                 .addValue(IS_READ, book.getIsRead())
+                .addValue(FORMAT, format)
                 .addValue(IMPRESSIONS, book.getImpressions());
         return namedParameterJdbcTemplate.queryForObject(
                 BookRepositorySql.UPDATE,
@@ -141,6 +152,10 @@ public class BookRepository {
         book.setCreator(rs.getString(CREATOR));
         book.setTags(rs.getString(TAGS));
         book.setIsRead(rs.getBoolean(IS_READ));
+        val format = rs.getString(FORMAT);
+        if (format != null) {
+            book.setFormat(BookFormat.fromString(format));
+        }
         book.setImpressions(rs.getString(IMPRESSIONS));
 
         return book;

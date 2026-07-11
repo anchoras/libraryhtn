@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+       id: 003-add-book-format-column
+       author: asyakovlev
+       changes:
+         - addColumn:
+             tableName: book
+             columns:
+               - column:
+                   name: format
+                   type: varchar(32)
+                   defaultValue: PHYSICAL
+                   constraints:
+                     nullable: false

@@ -13,6 +13,7 @@ public class BookUtil {
                 && filter.creator() == null
                 && filter.tags() == null
                 && filter.isRead() == null
+                && filter.format() == null
                 && filter.impressions() == null;
     }
 
@@ -21,6 +22,7 @@ public class BookUtil {
                 && book.creator() == null
                 && book.tags() == null
                 && book.isRead() == null
+                && book.format() == null
                 && book.impressions() == null;
     }
 
@@ -30,6 +32,7 @@ public class BookUtil {
                 && StringUtils.isBlank(filter.creator())
                 && StringUtils.isBlank(filter.tags())
                 && filter.isRead() == null
+                && filter.format() == null
                 && StringUtils.isBlank(filter.impressions()));
     }
 
@@ -39,6 +42,7 @@ public class BookUtil {
                 && StringUtils.isBlank(book.creator())
                 && StringUtils.isBlank(book.tags())
                 && book.isRead() == null
+                && book.format() == null
                 && StringUtils.isBlank(book.impressions()));
     }
 
@@ -88,6 +92,14 @@ public class BookUtil {
 
     public Boolean hasIsRead(BookDto book) {
         return book.isRead() != null;
+    }
+
+    public Boolean hasFormat(BookFilter filter) {
+        return filter.format() != null;
+    }
+
+    public Boolean hasFormat(BookDto book) {
+        return book.format() != null;
     }
 
     public Boolean hasImpressions(BookFilter filter) {
