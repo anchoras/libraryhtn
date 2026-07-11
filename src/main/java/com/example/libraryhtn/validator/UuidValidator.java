@@ -9,7 +9,7 @@ public class UuidValidator {
             Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
 
     public static boolean isValidUUID(String uuidString) {
-        if (uuidString == null) {
+        if (uuidString == null || uuidString.isBlank()) {
             return false;
         }
         return UUID_REGEX.matcher(uuidString).matches();

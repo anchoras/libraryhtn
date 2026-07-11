@@ -55,7 +55,7 @@ public class BookValidator {
             throw new BookValidationException("Id is empty in book request");
         }
         if (!UuidValidator.isValidUUID(id)) {
-            throw new BookValidationException("Id is not in UUID format in book request");
+            throw new BookValidationException("Id " + id + " is not in UUID format in book request");
         }
     }
 

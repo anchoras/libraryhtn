@@ -5,6 +5,7 @@ import com.example.libraryhtn.dto.BookDto;
 import com.example.libraryhtn.exception.BookNotFoundException;
 import com.example.libraryhtn.mapper.BookMapper;
 import com.example.libraryhtn.repository.BookRepository;
+import com.example.libraryhtn.util.UuidUtil;
 import com.example.libraryhtn.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -63,20 +64,22 @@ public class BookService {
     }
 
     public void remove(String id) {
-        bookValidator.validateId(id);
-        val affectedRows = bookRepository.delete(UUID.fromString(id));
+        val normalizedId = UuidUtil.normalize(id);
+        bookValidator.validateId(normalizedId);
+        val affectedRows = bookRepository.delete(UUID.fromString(normalizedId));
         if (affectedRows == 0) {
-            throw new BookNotFoundException("There is no book with id " + id + " for deleting");
+            throw new BookNotFoundException("There is no book with id " + normalizedId + " for deleting");
         }
     }
 
     public BookDto getById(String id) {
-        bookValidator.validateId(id);
-        val book = bookRepository.getById(UUID.fromString(id));
+        val normalizedId = UuidUtil.normalize(id);
+        bookValidator.validateId(normalizedId);
+        val book = bookRepository.getById(UUID.fromString(normalizedId));
         if (book.isPresent()) {
             return bookMapper.toDto(book.get());
         } else {
-            throw new BookNotFoundException("There is no book with id " + id);
+            throw new BookNotFoundException("There is no book with id " + normalizedId);
         }
     }
 
