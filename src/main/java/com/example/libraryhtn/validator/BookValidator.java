@@ -25,12 +25,6 @@ public class BookValidator {
         if (!BookUtil.hasCreator(book)) {
             throw new BookValidationException("There is no creator in book addition request");
         }
-        if (!BookUtil.hasIsRead(book)) {
-            throw new BookValidationException("There is no isRead in book addition request");
-        }
-        if (!BookUtil.hasFormat(book)) {
-            throw new BookValidationException("There is no format in book addition request");
-        }
         validateStringLength(book);
     }
 
