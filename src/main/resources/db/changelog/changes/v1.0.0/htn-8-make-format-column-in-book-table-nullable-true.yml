@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+       id: 008-make-format-column-nullable
+       author: asyakovlev
+       changes:
+         - dropNotNullConstraint:
+             tableName: book
+             columnName: format
+             columnDataType: varchar(32)
+         - dropNotNullConstraint:
+             tableName: book
+             columnName: is_read
+             columnDataType: varchar(32)

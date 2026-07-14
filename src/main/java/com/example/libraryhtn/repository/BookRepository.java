@@ -7,6 +7,7 @@ import com.example.libraryhtn.repository.sql.BookRepositorySql;
 import com.example.libraryhtn.util.BookUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.jspecify.annotations.NonNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -91,13 +92,7 @@ public class BookRepository {
     }
 
     public Book create(Book book) {
-        val mapSqlParameterSource = new MapSqlParameterSource()
-                .addValue(TITLE, book.getTitle())
-                .addValue(CREATOR, book.getCreator())
-                .addValue(TAGS, book.getTags())
-                .addValue(IS_READ, book.getIsRead())
-                .addValue(FORMAT, book.getFormat().name())
-                .addValue(IMPRESSIONS, book.getImpressions());
+        val mapSqlParameterSource = getBookMapSqlParameterSourceWithoutId(book);
         return namedParameterJdbcTemplate.query(
                 BookRepositorySql.CREATE,
                 mapSqlParameterSource,
@@ -122,17 +117,8 @@ public class BookRepository {
     }
 
     public Book update(Book book) {
-        val format = book.getFormat() != null
-                ? book.getFormat().name()
-                : null;
-        val mapSqlParameterSource = new MapSqlParameterSource()
-                .addValue(ID, book.getId())
-                .addValue(TITLE, book.getTitle())
-                .addValue(CREATOR, book.getCreator())
-                .addValue(TAGS, book.getTags())
-                .addValue(IS_READ, book.getIsRead())
-                .addValue(FORMAT, format)
-                .addValue(IMPRESSIONS, book.getImpressions());
+        val mapSqlParameterSource = getBookMapSqlParameterSourceWithoutId(book)
+                .addValue(ID, book.getId());
         return namedParameterJdbcTemplate.queryForObject(
                 BookRepositorySql.UPDATE,
                 mapSqlParameterSource,
@@ -159,6 +145,19 @@ public class BookRepository {
         book.setImpressions(rs.getString(IMPRESSIONS));
 
         return book;
+    }
+
+    private @NonNull MapSqlParameterSource getBookMapSqlParameterSourceWithoutId(Book book) {
+        val format = book.getFormat() != null
+                ? book.getFormat().name()
+                : null;
+        return new MapSqlParameterSource()
+                .addValue(TITLE, book.getTitle())
+                .addValue(CREATOR, book.getCreator())
+                .addValue(TAGS, book.getTags())
+                .addValue(IS_READ, book.getIsRead())
+                .addValue(FORMAT, format)
+                .addValue(IMPRESSIONS, book.getImpressions());
     }
 
 }
